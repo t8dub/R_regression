@@ -1,37 +1,13 @@
----
-title: "Multiple Linear Regression for Low Code Study"
-author: "TW"
-format: 
-    html: 
-      #mainfont: Times New Roman
-      fontfamily: libertinus
-      fontsize: 10pt
-editor: visual
----
-
-## Multiple Linear Regression for Low Code Study
-Using cleaned data from Forrester's Low Code Study, the code below uses regression models to identify
-the non-cost variables (predictors) that are the most predictive of cost variables (targets). The results
-will inform the development of a 3-class (low/median/high) 'Complexity' designation which will be used
-to predict costs for those outside of the study.
-
-The cost variable(s) in raw form were set as the target instead of the categorical 'Complexity'
-interpretation of costs since using the latter would obscure the ultimate target (costs). If targeting
-a categorical variable, logistic regression or classification approaches might be better. Since we're 
-targeting a scaled quantitative variable, we're using multiple linear regression here (the lm() function).
-Alternatives are feature selection (see stepwise, LASSO, or random forest) or regularization to identify
-the most important predictors and avoid overfitting.
-
+# REDACTED COMMENTARY ++++++++++++++++++
 
 # Import and view cleaned data file
 library(readxl)
-RegressionData <- read_excel("C:/Users/tmail/Desktop/Piedmont/ForresterLowCodeStudy/RegressionData.xlsx",
+RegressionData <- read_excel("+++++REDACTED+++++/RegressionData.xlsx",
 sheet = "Data")
 View(RegressionData)
 
 
-See 'SelectTarget&Predictors' tab in file above to view groups of predictors (A/B/C/D). Care was taken
-to minimize overfitting and collinearity. Initial fitting of multiple linear regression model:
+# REDACTED COMMENTARY ++++++++++++++++++
 
 
 # Fit a multiple linear regression model by group of predictors (A-H)
@@ -48,18 +24,7 @@ data = RegressionData)
 modelD <- lm(TOT5YrCosts ~ SolutionS10 + NumHrsQ3id + NumRecrrIntLabCatgsQ13 + RecrrIntLabHrsQ14 +
 NumTotDevs, data = RegressionData)
  
-# modelE <- lm(TOT5YrCosts ~ ImplTimeMosS13 + NumRecrrCostCatgsQ10 + NumRcrrInfrCatgsQ23 + NumEesS3,
-# data = RegressionData)
-# 
-# modelF <- lm(TOT5YrCosts ~ NumOneTimeTrngCostCatgsQ5 + NumRecrrIntTrainCatgsQ18 + SolutionS10 +
-# NumAutoWkflowsS16, data = RegressionData)
-# 
-# modelG <- lm(TOT5YrCosts ~ ExpWSolutionS12 + NumLicensesS14 + SolutionS10 + NumRecrrIntLabCatgsQ13 +
-# NumRecrrIntLabCatgsQ13, data = RegressionData)
-# 
-# modelH <- lm(TOT5YrCosts ~ NumOneTimeCostCatgsQ1 + CountryS1 + IndustryS4 + DevTypeS15 + NumTotDevs +
-# ExpWSolutionS12, data = RegressionData)
-
+# REDACTED COMMENTARY ++++++++++++++++++
 
 View summaries:
 
@@ -105,7 +70,7 @@ writeLines(capture.output(summary(step_modelH)), "Regression_Tot5YrCosts_step_H.
 
 
 Informed by the results above, these are the final groupings of predictors that will inform an updated
-(more predictive) "Complexity" designation:
+(more predictive) +++++REDACTED+++++ designation:
 
 
 # fitting multiple regression model
