@@ -1,0 +1,183 @@
+---
+title: "Multiple Linear Regression for Low Code Study"
+author: "TW"
+format: 
+    html: 
+      #mainfont: Times New Roman
+      fontfamily: libertinus
+      fontsize: 10pt
+editor: visual
+---
+
+## Multiple Linear Regression for Low Code Study
+
+Using cleaned data from Forrester's Low Code Study, the code below uses regression models to identify the non-cost variables (predictors) that are the most predictive of cost variables (targets). The results will inform the development of a 3-class (low/median/high) 'Complexity' designation which will be used to predict costs for those outside of the study.
+
+The cost variable(s) in raw form were set as the target instead of the categorical 'Complexity' interpretation of costs since using the latter would obscure the ultimate target (costs). If targeting a categorical variable, logistic regression or classification approaches might be better. Since we're targeting a scaled quantitative variable, we're using multiple linear regression here (the lm() function). Alternatives are feature selection (see stepwise, LASSO, or random forest) or regularization to identify the most important predictors and avoid overfitting.
+
+```{r}
+# Import and view cleaned data file
+library(readxl)
+RegressionData <- read_excel("C:/Users/tmail/Desktop/Piedmont/ForresterLowCodeStudy/RegressionData.xlsx",sheet = "Data")
+View(RegressionData)
+```
+
+See 'SelectTarget&Predictors' tab in file above to view groups of predictors (A/B/C/D). Care was taken to minimize overfitting and collinearity. Initial fitting of multiple linear regression model:
+
+```{r}
+# # Fit a multiple linear regression model by group of predictors (A-H)
+# modelA <- lm(TOT5YrCosts ~ NumOneTimeCostCatgsQ1 + CountryS1 + IndustryS4 + DevTypeS15 + AnnRevS2 + ExpWSolutionS12, data = RegressionData)
+# 
+# modelB <- lm(TOT5YrCosts ~ ImplTimeMosS13 + NumHrsQ3cm + NumRecrrCostCatgsQ10 + NumRcrrInfrCatgsQ23 + NumEesS3, data = RegressionData)
+# 
+# modelC <- lm(TOT5YrCosts ~ NumOneTimeTrngCostCatgsQ5 + DETrainQ6axhrs + NumRecrrIntTrainCatgsQ18 + NumLicensesS14 + NumAutoWkflowsS16, 
+# data = RegressionData)
+# 
+# modelD <- lm(TOT5YrCosts ~ SolutionS10 + NumHrsQ3id + NumRecrrIntLabCatgsQ13 + RecrrIntLabHrsQ14 + NumTotDevs, data = RegressionData)
+# 
+# modelE <- lm(TOT5YrCosts ~ ImplTimeMosS13 + NumRecrrCostCatgsQ10 + NumRcrrInfrCatgsQ23 + NumEesS3, data = RegressionData)
+# 
+# modelF <- lm(TOT5YrCosts ~ NumOneTimeTrngCostCatgsQ5 + NumRecrrIntTrainCatgsQ18 + SolutionS10 + NumAutoWkflowsS16, data = RegressionData)
+# 
+# modelG <- lm(TOT5YrCosts ~ ExpWSolutionS12 + NumLicensesS14 + SolutionS10 + NumRecrrIntLabCatgsQ13 + NumRecrrIntLabCatgsQ13, data = RegressionData)
+# 
+# modelH <- lm(TOT5YrCosts ~ NumOneTimeCostCatgsQ1 + CountryS1 + IndustryS4 + DevTypeS15 + NumTotDevs + ExpWSolutionS12, data = RegressionData)
+```
+
+View summaries:
+
+```{r}
+# View a summary of model results
+#summary(modelA)
+#summary(modelB)
+#summary(modelC)
+#summary(modelD)
+#summary(modelE)
+#summary(modelF)
+#summary(modelG)
+#summary(modelH)
+```
+
+Saving model output:
+
+```{r}
+# # Capture the summary results
+# summary_outputA <- capture.output(summary(modelA))
+# summary_outputB <- capture.output(summary(modelB))
+# summary_outputC <- capture.output(summary(modelC))
+# summary_outputD <- capture.output(summary(modelD))
+# summary_outputE <- capture.output(summary(modelE))
+# summary_outputF <- capture.output(summary(modelF))
+# summary_outputG <- capture.output(summary(modelG))
+# summary_outputH <- capture.output(summary(modelH))
+# 
+# # Specify the file path
+# file_pathA <- "Regression_Tot5YrCosts_A.txt"
+# file_pathB <- "Regression_Tot5YrCosts_B.txt"
+# file_pathC <- "Regression_Tot5YrCosts_C.txt"
+# file_pathD <- "Regression_Tot5YrCosts_D.txt"
+# file_pathE <- "Regression_Tot5YrCosts_E.txt"
+# file_pathF <- "Regression_Tot5YrCosts_F.txt"
+# file_pathG <- "Regression_Tot5YrCosts_G.txt"
+# file_pathH <- "Regression_Tot5YrCosts_H.txt"
+# 
+# # Write the captured output to a file
+# writeLines(summary_outputA, file_pathA)
+# writeLines(summary_outputB, file_pathB)
+# writeLines(summary_outputC, file_pathC)
+# writeLines(summary_outputD, file_pathD)
+# writeLines(summary_outputE, file_pathE)
+# writeLines(summary_outputF, file_pathF)
+# writeLines(summary_outputG, file_pathG)
+# writeLines(summary_outputH, file_pathH)
+```
+
+Using stepwise selection model to help identify a subset of the most relevant predictors from A/B/C/D:
+
+```{r}
+# # Perform stepwise selection using BIC as the criterion (B-D include hrs/ees data with too many blanks for step() function)
+# step_modelA <- step(modelA, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
+# 
+# step_modelE <- step(modelE, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
+# 
+# step_modelF <- step(modelF, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
+# 
+# step_modelG <- step(modelG, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
+# 
+# step_modelH <- step(modelH, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
+```
+
+Saving stepwise selection model output:
+
+```{r}
+# # Capture the summary results after stepwise selection 
+# summary_step_outputA <- capture.output(summary(step_modelA)) 
+# summary_step_outputE <- capture.output(summary(step_modelE)) 
+# summary_step_outputF <- capture.output(summary(step_modelF)) 
+# summary_step_outputG <- capture.output(summary(step_modelG)) 
+# summary_step_outputH <- capture.output(summary(step_modelH)) 
+
+# # Specify the file path 
+# file_pathstep_A <- "Regression_Tot5YrCosts_step_A.txt" 
+# file_pathstep_E <- "Regression_Tot5YrCosts_step_E.txt" 
+# file_pathstep_F <- "Regression_Tot5YrCosts_step_F.txt" 
+# file_pathstep_G <- "Regression_Tot5YrCosts_step_G.txt" 
+# file_pathstep_H <- "Regression_Tot5YrCosts_step_H.txt" 
+
+# # Write the captured output to a file 
+# writeLines(summary_step_outputA, file_pathstep_A) 
+# writeLines(summary_step_outputE, file_pathstep_E) 
+# writeLines(summary_step_outputF, file_pathstep_F) 
+# writeLines(summary_step_outputG, file_pathstep_G) 
+# writeLines(summary_step_outputH, file_pathstep_H)
+```
+
+Informed by the results above, these are the final groupings of predictors that will inform an updated (more predictive) "Complexity" designation:
+
+```{r}
+# fitting multiple regression model
+mod_Rev.Devs.Wkfls <- lm(TOT5YrCosts ~ FiveYrRev + NumTotDevs + NumAutoWkflowsS16, data = RegressionData)
+
+mod_Rev.Sol.Exp.Wkfls <- lm(TOT5YrCosts ~ FiveYrRev + SolutionS10 + ExpWSolutionS12 + NumAutoWkflowsS16, data = RegressionData)
+
+mod_Lics.Sol.PDev <- lm(TOT5YrCosts ~ NumLicensesS14 + SolutionS10 + NumProDevsS17, data = RegressionData)
+
+mod_Devs.Sol.Exp <- lm(TOT5YrCosts ~ NumTotDevs + SolutionS10 + ExpWSolutionS12, data = RegressionData)
+
+mod_Ees.Sol.Wkfls <- lm(TOT5YrCosts ~ NumEesS3 + SolutionS10 + NumAutoWkflowsS16, data = RegressionData)
+
+mod_Ees.Sol.Lics <- lm(TOT5YrCosts ~ NumEesS3 + SolutionS10 + NumLicensesS14, data = RegressionData)
+
+mod_Ees.Lics.Devs.Wkfls <- lm(TOT5YrCosts ~ NumEesS3 + NumLicensesS14 + NumTotDevs + NumAutoWkflowsS16, data = RegressionData)
+
+mod_Ees.Lics.Devs <- lm(TOT5YrCosts ~ NumEesS3 + NumLicensesS14 + NumTotDevs, data = RegressionData)
+
+```
+
+Saving model output:
+
+```{r}
+# Write the output to file
+writeLines(capture.output(summary(mod_Devs.Sol.Exp)),
+"Regression_Tot5YrCosts_DSX.txt")
+
+writeLines(capture.output(summary(mod_Ees.Sol.Wkfls)),
+"Regression_Tot5YrCosts_ESW.txt")
+
+writeLines(capture.output(summary(mod_Lics.Sol.PDev)),
+"Regression_Tot5YrCosts_LSP.txt")
+
+writeLines(capture.output(summary(mod_Rev.Devs.Wkfls)),
+"Regression_Tot5YrCosts_RDW.txt")
+
+writeLines(capture.output(summary(mod_Rev.Sol.Exp.Wkfls)), "Regression_Tot5YrCosts_RSXW.txt")
+
+writeLines(capture.output(summary(mod_Ees.Sol.Lics)),
+"Regression_Tot5YrCosts_ESL.txt")
+
+writeLines(capture.output(summary(mod_Ees.Lics.Devs.Wkfls)), "Regression_Tot5YrCosts_ELDW.txt")
+
+writeLines(capture.output(summary(mod_Ees.Lics.Devs)),
+"Regression_Tot5YrCosts_ELD.txt")
+
+```
