@@ -2,8 +2,7 @@
 
 # Import and view cleaned data file
 library(readxl)
-RegressionData <- read_excel("+++++REDACTED+++++/RegressionData.xlsx",
-sheet = "Data")
+RegressionData <- read_excel("+++++REDACTED+++++/RegressionData.xlsx", sheet = "Data")
 View(RegressionData)
 
 
@@ -12,29 +11,26 @@ View(RegressionData)
 
 # Fit a multiple linear regression model by group of predictors (A-H)
 modelA <- lm(TOT5YrCosts ~ NumOneTimeCostCatgsQ1 + CountryS1 + IndustryS4 + DevTypeS15 + AnnRevS2 + 
-ExpWSolutionS12, data = RegressionData)
+             ExpWSolutionS12, data = RegressionData)
  
 modelB <- lm(TOT5YrCosts ~ ImplTimeMosS13 + NumHrsQ3cm + NumRecrrCostCatgsQ10 + NumRcrrInfrCatgsQ23 +
-NumEesS3, data = RegressionData)
+             NumEesS3, data = RegressionData)
  
 modelC <- lm(TOT5YrCosts ~ NumOneTimeTrngCostCatgsQ5 + DETrainQ6axhrs + NumRecrrIntTrainCatgsQ18 +
-NumLicensesS14 + NumAutoWkflowsS16, 
-data = RegressionData)
+             NumLicensesS14 + NumAutoWkflowsS16, data = RegressionData)
  
 modelD <- lm(TOT5YrCosts ~ SolutionS10 + NumHrsQ3id + NumRecrrIntLabCatgsQ13 + RecrrIntLabHrsQ14 +
-NumTotDevs, data = RegressionData)
- 
+             NumTotDevs, data = RegressionData)
+
+
 # REDACTED COMMENTARY ++++++++++++++++++
 
-View summaries:
 
 # View a summary of model results
 summary(modelA)
 #summary(modelB)
 #summary(modelC)
 #summary(modelD)
-
-Saving model output:
 
 # Write the captured output to file
 writeLines(capture.output(summary(modelA)), "Regression_Tot5YrCosts_A.txt")
@@ -46,20 +42,14 @@ writeLines(capture.output(summary(modelD)), "Regression_Tot5YrCosts_D.txt")
 # writeLines(capture.output(summary(modelG)), "Regression_Tot5YrCosts_G.txt")
 # writeLines(capture.output(summary(modelH)), "Regression_Tot5YrCosts_H.txt")
 
-
-Using stepwise selection model to help identify a subset of the most relevant predictors from A/B/C/D:
-
-# Perform stepwise selection using BIC as the criterion (B-D include hrs/ees data with too many blanks
-for step() function)
+# Perform stepwise selection using BIC as the criterion model to help identify a subset of the most
+relevant predictors (B-D include hrs/ees data with too many blanks for step() function)
 
 step_modelA <- step(modelA, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
 step_modelE <- step(modelE, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
 step_modelF <- step(modelF, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
 step_modelG <- step(modelG, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
 step_modelH <- step(modelH, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
-
-
-Saving stepwise selection model output:
 
 # Write the captured output to a file 
 writeLines(capture.output(summary(step_modelA)), "Regression_Tot5YrCosts_step_A.txt) 
@@ -69,31 +59,21 @@ writeLines(capture.output(summary(step_modelG)), "Regression_Tot5YrCosts_step_G.
 writeLines(capture.output(summary(step_modelH)), "Regression_Tot5YrCosts_step_H.txt) 
 
 
-Informed by the results above, these are the final groupings of predictors that will inform an updated
-(more predictive) +++++REDACTED+++++ designation:
+# REDACTED COMMENTARY ++++++++++++++++++
 
 
 # fitting multiple regression model
 mod_Rev.Devs.Wkfls <- lm(TOT5YrCosts ~ FiveYrRev + NumTotDevs + NumAutoWkflowsS16, data = RegressionData)
-
 mod_Rev.Sol.Exp.Wkfls <- lm(TOT5YrCosts ~ FiveYrRev + SolutionS10 + ExpWSolutionS12 + NumAutoWkflowsS16,
-data = RegressionData)
-
+                            data = RegressionData)
 mod_Lics.Sol.PDev <- lm(TOT5YrCosts ~ NumLicensesS14 + SolutionS10 + NumProDevsS17, data = RegressionData)
-
 mod_Devs.Sol.Exp <- lm(TOT5YrCosts ~ NumTotDevs + SolutionS10 + ExpWSolutionS12, data = RegressionData)
-
 mod_Ees.Sol.Wkfls <- lm(TOT5YrCosts ~ NumEesS3 + SolutionS10 + NumAutoWkflowsS16, data = RegressionData)
-
 mod_Ees.Sol.Lics <- lm(TOT5YrCosts ~ NumEesS3 + SolutionS10 + NumLicensesS14, data = RegressionData)
-
 mod_Ees.Lics.Devs.Wkfls <- lm(TOT5YrCosts ~ NumEesS3 + NumLicensesS14 + NumTotDevs + NumAutoWkflowsS16,
-data = RegressionData)
-
+                              data = RegressionData)
 mod_Ees.Lics.Devs <- lm(TOT5YrCosts ~ NumEesS3 + NumLicensesS14 + NumTotDevs, data = RegressionData)
 
-
-Saving model output:
 
 # Write the output to file
 writeLines(capture.output(summary(mod_Devs.Sol.Exp)), "Regression_Tot5YrCosts_DSX.txt")
