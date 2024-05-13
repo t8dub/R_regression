@@ -43,7 +43,7 @@ writeLines(capture.output(summary(modelD)), "Regression_Tot5YrCosts_D.txt")
 # writeLines(capture.output(summary(modelH)), "Regression_Tot5YrCosts_H.txt")
 
 # Perform stepwise selection using BIC as the criterion model to help identify a subset of the most
-relevant predictors (B-D include hrs/ees data with too many blanks for step() function)
+# relevant predictors (B-D include hrs/ees data with too many blanks for step() function)
 
 step_modelA <- step(modelA, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
 step_modelE <- step(modelE, direction = "both", k = log(nrow(RegressionData)), trace = FALSE)
